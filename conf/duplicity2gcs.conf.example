@@ -1,0 +1,103 @@
+# /etc/duplicity2gcs.conf & /etc/duplicity2gcs.d/<LABEL>.conf example
+# /etc/duplicity2gcs.conf is loaded before every backup
+# /etc/duplicity2gcs.d/<LABEL>.conf must only include settings that are
+# needed/changed for the specific label
+# Typically none of the GSC & MAIB settings are needed in a <LABEL>
+# The <LABEL> will be used as a label for the duplicility backup
+#####
+
+# Target Google Cloud Storage Project
+# Typically Not Used for <LABEL> File
+GCS_PROJECT="xltech-duplicity"
+
+# Target Google Cloud Storage Location
+# Typically Not Used for <LABEL> File
+GCS_LOCATION="asia-southeast1"
+
+# Target Google Cloud Storage Bucket
+# Typically Not Used for <LABEL> File
+GCS_BUCKET="gs://duplicity-$(hostname --fqdn | sed -e 's/\./-/g')"
+
+# Target Google Cloud Storage Type
+# Typically Not Used for <LABEL> File
+GCS_STORAGE_TYPE="nearline"
+
+# Mail-In-A-Box's conf file name
+# Typically Not Used for <LABEL> File
+# Triggered by --miab flag
+MIAB_CONF_LOCATION="/etc/mailinabox.conf"
+
+# Mail-In-A-Box's encryption key file name
+# Will override KEY_FILE if MIAB job specified
+# Typically Not Used for <LABEL> File
+# Triggered by --miab flag
+# *** You Need This File/Key for Restoring - KEEP A SECURE COPY
+# *** Keep a backup of the file (or contents)
+# *** OFF this system (e.g in a alternative secure file or note system)
+# *** Without this file, your backup is useless and you will be unable
+# *** to restore your system or any data if/when lost
+MIAB_KEY="secret_key.txt"
+
+# Encryption key file name
+# Typically Not Used for <LABEL> File
+# *** You Need This File/Key for Restoring - KEEP A SECURE COPY
+# *** Keep a backup of the file (or contents)
+# *** OFF this system (e.g in a alternative secure file or note system)
+# *** Without this file, your backup is useless and you will be unable
+# *** to restore your system or any data if/when lost
+KEY_FILE="secret_key.txt"
+
+# Where we want duplicity to store cache/transient files
+# Typically Not Used for <LABEL> File
+ARCHIVE_CACHE="/var/backups/duplicity"
+
+# Services we want stoped before duplicity  starts
+# will be restarted after duplicity finished
+# Multiple Values Seperated by '|'
+# Typically expect to be set or cleared per <LABEL> file & not inherited
+# The --miab flag will trigger required services (reference MIAB backup.py)
+SERVICES=""
+
+# Commands to run before duplicity runs
+# will be run as a single line/command
+# if not on the system path, then specify full paths names from root '/'
+# can be used for custom environment/state setting
+# or if there are miscellanous files to move into the source path
+# Typically expect to be set or cleared per <LABEL> file & not inherited
+PRE_DUPLICITY_CMD=""
+
+# Source directory of files to be restored
+# Specify full paths names from root '/'
+# Typically expect to be set per <LABEL> file
+SOURCE="/"
+
+# Excluded Directories from SOURCE
+# Multiple Values Seperated by '|'
+# Source is referenced by short hand of '**' (Duplicity convention)
+# Duplicity will fail if the path is not found/invalid (v0.7.06 & 0.6.23)
+# Typically expect to be set or cleared per <LABEL> file & not inherited
+EXCLUDE_DIR="**/tmp|**/temp"
+
+# Commands to run after duplicity runs
+# will be run as a single line/command
+# if not on the system path, then specify full paths names from root '/'
+# can be used for custom environment/state setting/re-enstatement
+# Typically expect to be set or cleared per <LABEL> file & not inherited
+POST_DUPLICITY_CMD=""
+
+# Full/Diff Backup Cycle
+# Maximum number of Days (D) or Months (M) since last full backup to wait
+# to next full back. Months is measured as 30 days (not calendar months)
+# When a full backup is not required, a differential backup is performs
+# Typically expect to be set per <LABEL> file else inherited
+BACKUP_CYCLE="28D"
+
+# Backup retention cycle
+# When cleaning up backups, minimum no. of days (D) or Months (M) to retain
+# Note: Full backups will be retained as long as a differential is
+#       dependant upon it
+# Be aware some Google Storage types have a minimum duration and early
+# deletion will incur a early deletion charge - understood to be pro rata
+# of the minimum duration not met
+# Typically expect to be set per <LABEL> file else inherited
+BACKUP_RETENTION="2M"
